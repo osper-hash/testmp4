@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Level 5</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+      background: black;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .welcome-text {
+      font-size: 2em;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 5px red;
+    }
+
+    .question-section {
+      display: none; /* Hidden until the first video finishes */
+      flex-direction: column;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .text-input {
+      padding: 10px;
+      font-size: 1.2em;
+      border: 2px solid red;
+      border-radius: 5px;
+      background: black;
+      color: white;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .submit-button {
+      padding: 10px 20px;
+      font-size: 1.2em;
+      background-color: red;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 0 10px red;
+      transition: background-color 0.3s;
+      margin-top: 20px;
+    }
+
+    .submit-button:hover {
+      background-color: darkred;
+    }
+
+    #repeat-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Ensures the video fills the screen */
+      display: none; /* Hidden until the answer is submitted */
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <p class="welcome-text">Welcome to the Finals Sousou, you have made it!</p>
+    <video id="intro-video" autoplay playsinline controls>
+      <source src="finals.mp4" type="video/mp4">
+      Your browser does not support the video element.
+    </video>
+
+    <!-- Question Section -->
+    <div class="question-section" id="question-section">
+      <p>What's 1 + 1 = ?</p>
+      <input type="text" class="text-input" id="answer-input" placeholder="Enter your answer here">
+      <button class="submit-button" onclick="checkAnswer()">Submit</button>
+    </div>
+  </div>
+
+  <!-- Video that plays after correct answer -->
+  <video id="repeat-video" playsinline>
+    <source src="jumpscare.mp4" type="video/mp4">
+    Your browser does not support the video element.
+  </video>
+
+  <script>
+    const introVideo = document.getElementById("intro-video");
+    const questionSection = document.getElementById("question-section");
+    const repeatVideo = document.getElementById("repeat-video");
+
+    // Ensure videos start with proper settings
+    introVideo.muted = false; // Unmute the first video
+    introVideo.volume = 1.0;  // Set volume to maximum
+
+    // Show the question section after the intro video ends
+    introVideo.onended = () => {
+      questionSection.style.display = "flex";
+    };
+
+    function checkAnswer() {
+      const userInput = document.getElementById("answer-input").value.trim();
+      const correctAnswer = "2";
+
+      if (userInput === correctAnswer) {
+        questionSection.style.display = "none"; // Hide the question section
+        repeatVideo.style.display = "block"; // Show the repeat video
+        repeatVideo.muted = false; // Ensure the second video is not muted
+        repeatVideo.volume = 1.0; // Set volume to maximum
+        repeatVideo.play();
+
+        // Make the video loop 4 times
+        let playCount = 0;
+        repeatVideo.onended = () => {
+          playCount++;
+          if (playCount < 4) {
+            repeatVideo.play();
+          }
+        };
+      } else {
+        alert("Incorrect answer, try again!"); // Show an error message for incorrect answers
+      }
+    }
+  </script>
+</body>
+</html>
